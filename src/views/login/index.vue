@@ -5,12 +5,22 @@
       <div class="container__form container--signup">
         <form action="#" class="form" id="form1">
           <h2 class="form__title">注 册</h2>
-          <input type="text" placeholder="用户名" class="input" />
-          <div class="err">请输入用户名</div>
-          <input type="email" placeholder="邮箱" class="input" />
-          <div class="err">请输入邮箱</div>
-          <input type="password" placeholder="密码" class="input" />
-          <div class="err">请输入密码</div>
+          <input
+            type="text"
+            placeholder="用户名"
+            @blur="changeName"
+            v-model="userName"
+            class="input"
+          />
+          <div class="err">{{ errName }}</div>
+          <input
+            type="password"
+            placeholder="密码"
+            v-model="passWord"
+            @blur="changePassWord"
+            class="input"
+          />
+          <div class="err">{{ errPassWord }}</div>
           <button class="btn">注 册</button>
         </form>
       </div>
@@ -83,9 +93,15 @@ export default {
       }
     }
 
-    // 提交 登录
-    function submitSignin() {
-      if (!state.userName || !state.passWord) return;
+    // 提交 登录or注册
+    function submitSignin(type) {
+      if (!state.userName) {
+        state.errName = "请输入用户名";
+        return;
+      } else if (!state.passWord) {
+        state.errPassWord = "请输入密码";
+        return;
+      }
       console.log(state.userName, "=====登录====", state.passWord);
     }
 
@@ -200,7 +216,7 @@ export default {
           }
         }
         .link {
-          margin: 24px 0;
+          margin: 12px 0;
           font-size: 14px;
           color: #464646;
           text-decoration: none;
