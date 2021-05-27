@@ -21,7 +21,7 @@
             class="input"
           />
           <div class="err">{{ errPassWord }}</div>
-          <button class="btn">注 册</button>
+          <button class="btn" @click="submitSignin('signup')">注 册</button>
         </form>
       </div>
 
@@ -45,7 +45,7 @@
           />
           <div class="err">{{ errPassWord }}</div>
           <a href="#" class="link">忘记密码?</a>
-          <button class="btn" @click="submitSignin">登 录</button>
+          <button class="btn" @click="submitSignin('signin')">登 录</button>
         </form>
       </div>
 
@@ -66,6 +66,8 @@
 
 <script>
 import { reactive, toRefs } from "vue";
+import { login, signUp } from "@/api/user";
+import { useStore } from "vuex";
 export default {
   setup() {
     let state = reactive({
@@ -75,6 +77,7 @@ export default {
       errName: "", // 错误提示 用户名
       errPassWord: "", // 错误提示 密码
     });
+    const store = useStore();
     // 登录 用户名
     function changeName(e) {
       if (!e.target.value) {
@@ -94,7 +97,7 @@ export default {
     }
 
     // 提交 登录or注册
-    function submitSignin(type) {
+    async function submitSignin(type) {
       if (!state.userName) {
         state.errName = "请输入用户名";
         return;
@@ -102,7 +105,34 @@ export default {
         state.errPassWord = "请输入密码";
         return;
       }
-      console.log(state.userName, "=====登录====", state.passWord);
+      // 登录
+      if (type == "signin") {
+        let data = {
+          userName: state.userName,
+          passWord: state.passWord,
+        };
+        let res = await login(data).catch(() => {
+          console.log("=====登录==错误==");
+        });
+        if (res && res.code != 200) return;
+        let token = res.headers["x-token"];
+        store.commit("user/SET_TOKEN", token);
+        // let v = store.state;
+        // console.log(store.getters.userInfo, "=====store==");
+      } else {
+        // 注册
+        let data = {
+          userName: state.userName,
+          passWord: state.passWord,
+        };
+        let res = await signUp(data).catch(() => {
+          console.log("=====注册==错误==");
+        });
+        if (res && res.code != 200) return;
+        state.flag = false;
+        state.userName = "";
+        state.passWord = "";
+      }
     }
 
     // 切换 点击
@@ -113,6 +143,7 @@ export default {
       state.errPassWord = "";
       state.errName = "";
     }
+
     return {
       ...toRefs(state),
       clickShow,

@@ -1,43 +1,43 @@
-import axios from 'axios'
-import store from '@/store'
-import Message from 'ant-design-vue/lib/message'
-import 'ant-design-vue/lib/button/style/css'
-import { getToken } from '@/utils/auth'
-import config from '@/utils/config'
-
+import axios from 'axios';
+import { getToken } from '@/utils/auth';
+import store from '@/store';
 // create an axios instance
 const service = axios.create({
-    baseURL: config.dev, // url = base url + request url
+    baseURL: 'http://127.0.0.1:3000', // url = base url + request url
     timeout: 30000 // request timeout
 })
 
-// request interceptor
+const whiteList = ['/user/login', '/user/register'];// 不需要带token
+
+// 请求
 service.interceptors.request.use(
     config => {
-        if (store.getters.token) {
-            config.headers.Authorization = getToken()
+        console.log(config, "====config  请求   request===")
+        if (whiteList.indexOf(config.url) == -1) {
+            if (store.getters.token) {
+                config.headers['X-Token'] = getToken()
+            }
         }
         return config
     },
     error => {
-        console.log(error) // for debug
+        console.log(error, "====error  请求错误") // for debug
         return Promise.reject(error)
     }
 )
 
-// response interceptor
+// 响应
 service.interceptors.response.use(
     response => {
-        if (response.headers.authorization || !response.data.code) {
-            return response
+        const res = response.data || {};
+        if (response.headers['x-token']) {
+            res.headers = response.headers
         }
-        const res = response.data
-
         if (res.code !== 200) {
-            Message.error({
-                content: res.msg || 'Error',
-                duration: 5
-            })
+            // Message.error({
+            //     content: res.msg || 'Error',
+            //     duration: 5
+            // })
 
             return Promise.reject(new Error(res.msg || 'Error'))
         } else {
@@ -45,11 +45,11 @@ service.interceptors.response.use(
         }
     },
     error => {
-        console.log('err' + error) // for debug
-        Message.error({
-            content: error.message,
-            duration: 5
-        })
+        // console.log('err' + error) // for debug
+        // Message.error({
+        //     content: error.message,
+        //     duration: 5
+        // })
         return Promise.reject(error)
     }
 )
