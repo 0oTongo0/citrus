@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { getToken } from '@/utils/auth';
 import store from '@/store';
+import Message from '@/components/Message/index';
 // create an axios instance
 const service = axios.create({
     baseURL: 'http://127.0.0.1:3000', // url = base url + request url
@@ -34,22 +35,14 @@ service.interceptors.response.use(
             res.headers = response.headers
         }
         if (res.code !== 200) {
-            // Message.error({
-            //     content: res.msg || 'Error',
-            //     duration: 5
-            // })
-
-            return Promise.reject(new Error(res.msg || 'Error'))
+            Message.error(res.message || 'Error')
+            return Promise.reject(new Error(res.message || 'Error'))
         } else {
-            return res
+            return Promise.resolve(res)
         }
     },
     error => {
-        // console.log('err' + error) // for debug
-        // Message.error({
-        //     content: error.message,
-        //     duration: 5
-        // })
+        Message.error(error.message || 'Error')
         return Promise.reject(error)
     }
 )

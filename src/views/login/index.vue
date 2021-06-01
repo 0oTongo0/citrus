@@ -3,7 +3,7 @@
     <div class="container" :class="{ active: flag }">
       <!-- 注 册 -->
       <div class="container__form container--signup">
-        <form action="#" class="form" id="form1">
+        <form class="form" id="form1">
           <h2 class="form__title">注 册</h2>
           <input
             type="text"
@@ -27,7 +27,7 @@
 
       <!-- 登 录 -->
       <div class="container__form container--signin">
-        <form action="#" class="form" id="form2">
+        <form class="form" id="form2">
           <h2 class="form__title">登 录</h2>
           <input
             placeholder="用户名"
@@ -38,6 +38,7 @@
           />
           <div class="err">{{ errName }}</div>
           <input
+            type="password"
             placeholder="密码"
             class="input"
             v-model="passWord"
@@ -68,6 +69,7 @@
 import { reactive, toRefs } from "vue";
 import { login, signUp } from "@/api/user";
 import { useStore } from "vuex";
+import Message from "@/components/Message/index.js";
 export default {
   setup() {
     let state = reactive({
@@ -107,16 +109,22 @@ export default {
       }
       // 登录
       if (type == "signin") {
-        let data = {
-          userName: state.userName,
-          passWord: state.passWord,
-        };
-        let res = await login(data).catch(() => {
-          console.log("=====登录==错误==");
-        });
-        if (res && res.code != 200) return;
-        let token = res.headers["x-token"];
-        store.commit("user/SET_TOKEN", token);
+        try {
+          let data = {
+            userName: state.userName,
+            passWord: state.passWord,
+          };
+          let res = await login(data);
+          if (res && res.code != 200) return;
+          let token = res.headers["x-token"];
+          if (token) {
+            store.commit("user/SET_TOKEN", token);
+            Message.success(res.message);
+          }
+        } catch (err) {
+          console.log(err, "=====登录==错误==");
+        }
+
         // let v = store.state;
         // console.log(store.getters.userInfo, "=====store==");
       } else {
@@ -125,13 +133,15 @@ export default {
           userName: state.userName,
           passWord: state.passWord,
         };
-        let res = await signUp(data).catch(() => {
-          console.log("=====注册==错误==");
-        });
-        if (res && res.code != 200) return;
-        state.flag = false;
-        state.userName = "";
-        state.passWord = "";
+        try {
+          let res = await signUp(data);
+          state.flag = false;
+          state.userName = "";
+          state.passWord = "";
+          Message.success(res.message);
+        } catch (err) {
+          console.log(err, "=====注册==错误==");
+        }
       }
     }
 

@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { getToken } from '@/utils/auth'
+import { getToken, removeToken } from '@/utils/auth'
 const router = createRouter({
     history: createWebHashHistory(),
     routes: [
@@ -18,6 +18,10 @@ router.beforeEach((to, from, next) => {
     const hasToken = getToken();
     if (hasToken) {
         next()
+        if (to.path === '/login') {
+            next('/login')
+            removeToken()
+        }
         console.log(to.path, "====to.path===")
     } else {
         if (whiteList.indexOf(to.path) !== -1) {
