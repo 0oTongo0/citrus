@@ -69,6 +69,7 @@
 import { reactive, toRefs } from "vue";
 import { login, signUp } from "@/api/user";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import Message from "@/components/Message/index.js";
 export default {
   setup() {
@@ -80,6 +81,7 @@ export default {
       errPassWord: "", // 错误提示 密码
     });
     const store = useStore();
+    const router = useRouter();
     // 登录 用户名
     function changeName(e) {
       if (!e.target.value) {
@@ -120,6 +122,7 @@ export default {
           if (token) {
             store.commit("user/SET_TOKEN", token);
             Message.success(res.message);
+            router.push("/index");
           }
         } catch (err) {
           console.log(err, "=====登录==错误==");
