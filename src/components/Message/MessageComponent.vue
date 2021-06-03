@@ -17,9 +17,7 @@ export default {
     messageList: Array,
   },
   setup(props) {
-    let state = reactive({
-      messageList: props.messageList,
-    });
+    let state = reactive({});
     function setClass(type) {
       if (type === "info") {
         return "message-info-item";

@@ -17,3 +17,12 @@ export function signUp(data) {
         data
     })
 }
+
+// 搜索
+export function searchUser(data) {
+    return request({
+        url: '/user/search',
+        method: 'post',
+        data
+    })
+}

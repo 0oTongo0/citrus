@@ -71,6 +71,7 @@ import { login, signUp } from "@/api/user";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import Message from "@/components/Message/index.js";
+import { debounce } from "@/utils/debounceOrthrottle";
 export default {
   setup() {
     let state = reactive({

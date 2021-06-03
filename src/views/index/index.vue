@@ -6,7 +6,7 @@
         <!-- top -->
         <header class="citrus-left-t">
           <img src="" alt="" class="portrait-img" />
-          <div class="citrus-left-search">
+          <div class="citrus-left-search" @click="clickShow">
             <i class="iconfont icon-sousuo"></i>
           </div>
         </header>
@@ -62,11 +62,33 @@
         </section>
         <footer class="citrus-main-footer"></footer>
       </main>
+      <!-- 搜索 -->
+      <search v-model:searchFlag="searchFlag" />
     </div>
   </div>
 </template>
 
 <script >
+import { reactive, toRefs } from "vue";
+import search from "./components/search.vue";
+export default {
+  components: {
+    search,
+  },
+  setup() {
+    let state = reactive({
+      searchFlag: false, // 搜索弹框
+    });
+    // 搜索显示
+    function clickShow() {
+      state.searchFlag = true;
+    }
+    return {
+      ...toRefs(state),
+      clickShow,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -75,6 +97,7 @@
   height: 100%;
   width: 100%;
   .citrus-box {
+    position: relative;
     display: flex;
     width: 1100px;
     height: 700px;
