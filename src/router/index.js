@@ -5,14 +5,14 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            redirect: '/index',
+            redirect: '/login',
         },
         { path: '/login', component: () => import('@/views/login/index'), },
         { path: '/index', component: () => import('@/views/index/index'), }
     ]
 })
 
-const whiteList = ['/login'] // 未验证token的路由需要加入白名单
+const whiteList = ['/login'] // 未验证token的路由
 
 router.beforeEach((to, from, next) => {
     const hasToken = getToken();

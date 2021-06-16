@@ -3,7 +3,7 @@
     <div class="container" :class="{ active: flag }">
       <!-- 注 册 -->
       <div class="container__form container--signup">
-        <form class="form" id="form1">
+        <div class="form" id="form1">
           <h2 class="form__title">注 册</h2>
           <input
             type="text"
@@ -22,12 +22,12 @@
           />
           <div class="err">{{ errPassWord }}</div>
           <button class="btn" @click="submitSignin('signup')">注 册</button>
-        </form>
+        </div>
       </div>
 
       <!-- 登 录 -->
       <div class="container__form container--signin">
-        <form class="form" id="form2">
+        <div class="form" id="form2">
           <h2 class="form__title">登 录</h2>
           <input
             placeholder="用户名"
@@ -47,7 +47,7 @@
           <div class="err">{{ errPassWord }}</div>
           <a href="#" class="link">忘记密码?</a>
           <button class="btn" @click="submitSignin('signin')">登 录</button>
-        </form>
+        </div>
       </div>
 
       <!-- 遮罩 -->
@@ -122,6 +122,7 @@ export default {
           let token = res.headers["x-token"];
           if (token) {
             store.commit("user/SET_TOKEN", token);
+            store.commit("user/SET_USER_INFO", res.results[0]);
             Message.success(res.message);
             router.push("/index");
           }

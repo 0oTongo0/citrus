@@ -15,3 +15,8 @@ li{
 html,body,#app{
     height: 100%;
 }
+
+input[disabled]{
+    background: #ddd !important;
+    cursor: not-allowed;
+}

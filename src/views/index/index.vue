@@ -5,7 +5,7 @@
       <aside class="citrus-left">
         <!-- top -->
         <header class="citrus-left-t">
-          <img src="" alt="" class="portrait-img" />
+          <img src="" alt="" class="portrait-img" @click="clickUserShow" />
           <div class="citrus-left-search" @click="clickShow">
             <i class="iconfont icon-sousuo"></i>
           </div>
@@ -64,6 +64,8 @@
       </main>
       <!-- 搜索 -->
       <search v-model:searchFlag="searchFlag" />
+      <!-- 修改用户 -->
+      <updataUser v-model:userFlag="userFlag" />
     </div>
   </div>
 </template>
@@ -71,21 +73,31 @@
 <script >
 import { reactive, toRefs } from "vue";
 import search from "./components/search.vue";
+import updataUser from "./components/updataUser.vue";
+
 export default {
   components: {
     search,
+    updataUser,
   },
   setup() {
     let state = reactive({
       searchFlag: false, // 搜索弹框
+      userFlag: false, // 修改用户弹框
     });
     // 搜索显示
     function clickShow() {
       state.searchFlag = true;
     }
+
+    // 修改用户显示
+    function clickUserShow() {
+      state.userFlag = true;
+    }
     return {
       ...toRefs(state),
       clickShow,
+      clickUserShow,
     };
   },
 };

@@ -15,7 +15,7 @@
         <div class="content">
           <ul class="content-list">
             <li class="content-item" v-for="item in listData" :key="item.id">
-              <img :src="item.imgUrl" class="img" />
+              <img :src="imgPath + item.imgUrl" class="img" />
               <div class="name" v-html="item.userName"></div>
               <span class="item-but">添加好友</span>
             </li>
@@ -30,6 +30,7 @@
 import { reactive, toRefs } from "vue";
 import { searchUser } from "@/api/user";
 import { debounce } from "@/utils/debounceOrthrottle";
+let imgPath = "http://127.0.0.1:3000";
 export default {
   props: {
     searchFlag: Boolean,
@@ -45,14 +46,17 @@ export default {
     let state = reactive({
       userName: "",
       listData: [],
+      imgPath,
     });
 
+    // 点击bg 隐藏
     function clickHide() {
       context.emit("update:searchFlag", false);
       state.listData = [];
       state.userName = "";
     }
 
+    // 搜索
     let inputMsg = debounce(async () => {
       try {
         let data = {

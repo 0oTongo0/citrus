@@ -2,17 +2,20 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const state = {
     token: getToken(),
-    userInfo: { 'name': '222222222222222' },
+    userInfo: {},
 }
 
 const mutations = {
     SET_TOKEN: (state, token) => {
-        state.token = token
+        state.token = token;
         setToken(token)
     },
     SET_USER_INFO: (state, value) => {
         state.userInfo = Object.assign({}, state.userInfo, value)
     },
+    REMOVE_TOKEN: (state, token) => {
+        removeToken()
+    }
 }
 
 const actions = {}
